@@ -31,19 +31,23 @@ app.use(cookieParser())
 
 var session;
 
-app.use('/login', login);
-app.use('/signUp', signUp);
-app.use('/home', home);
+app.all('/', function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+});
 
-app.get('/api/customers', csrfProtection,(req, res) => {
+app.use('/api/login', login);
+app.use('/api/signUp', signUp);
+app.use('/api/home', home);
+
+app.get('/getToken', csrfProtection,(req, res) => {
   session = req.session;
-  const customers = [
-    {id: 1, firstName: 'John', lastName: 'Doe'},
-    {id: 2, firstName: 'Brad', lastName: 'Traversy'},
-    {id: 3, firstName: 'Mary', lastName: 'Swanson'},
-  ];
-
-  res.json(customers);
+  const token = {
+    'token': req.csrfToken(),
+  };
+  
+  res.json(token);
 });
 
 app.use(function (err, req, res, next) {
@@ -53,7 +57,7 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.redirect('error');
 });
 
 const port = 5000;
