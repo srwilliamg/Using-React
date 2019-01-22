@@ -2,7 +2,7 @@
 const express = require('express');
 const execute = require('../db/executeQuery.js');
 const router = express.Router();
-
+const Tasks = require('../models/tasks');
 
 // Consult every task pending user's task
 router.post('/consultTasks',(req,res) => {
@@ -10,33 +10,42 @@ router.post('/consultTasks',(req,res) => {
 
 	console.log(req.body.idUser);
 	
-
 	let jsonResponse = {
 		data:{},
 		status: false
 	};
 
-	// query
-	var strQuery = `SELECT
-								*
-								FROM
-								tasks t
-								WHERE
-								idUser = ? `;
+	Tasks.findAll()
+		.then(data => {
+			jsonResponse.data = data
+			res.json(jsonResponse);
+		})
+		.catch(err => {
+			console.log(err);
+			res.json(jsonResponse);
+		})
 
-	// query params
-	var queryParams = [req.body.idUser];
+	// // query
+	// var strQuery = `SELECT
+	// 							*
+	// 							FROM
+	// 							tasks t
+	// 							WHERE
+	// 							idUser = ? `;
 
-	execute(strQuery, queryParams, function(response){
-		if(response.status){
-			jsonResponse.data = response.data;
-			jsonResponse.status = true;
-		}else{
-			jsonResponse.status = false;
-		}
-		// response to client
-		res.json(jsonResponse);
-	});
+	// // query params
+	// var queryParams = [req.body.idUser];
+
+	// execute(strQuery, queryParams, function(response){
+	// 	if(response.status){
+	// 		jsonResponse.data = response.data;
+	// 		jsonResponse.status = true;
+	// 	}else{
+	// 		jsonResponse.status = false;
+	// 	}
+	// 	// response to client
+	// 	res.json(jsonResponse);
+	// });
 });
 
 // Edita una tarea en la BD respecto a los adatos enviados (is, nombre, prioridad y fecha)

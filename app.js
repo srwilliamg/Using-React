@@ -2,6 +2,7 @@ const express = require('express');
 var session = require('express-session');
 var path = require('path');
 var bodyParser = require('body-parser');
+var cors = require('cors');
 var cookieParser = require('cookie-parser');
 var csrf = require('csurf'); //cross-site protection
 
@@ -11,6 +12,37 @@ const app = express();
 // app.engine('html', 'index.html');
 // app.set('view engine', 'html');
 app.use(express.static(path.join(__dirname + '/assets')));
+app.use(cors());
+
+const corsOptionsDelegate = (req, callback) => {
+  let corsOptions;
+
+  if (whitelist.indexOf(req.header('Origin')) !== -1) {
+    corsOptions = {
+      origin: true
+    };
+  } else {
+    corsOptions = {
+      origin: false
+    };
+  }
+
+  return callback(null, corsOptions);
+};
+
+cors(corsOptionsDelegate);
+
+
+const db = require('./config/db');
+
+db
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
 
 var csrfProtection = csrf({ cookie: true });
 //var parseForm = bodyParser.urlencoded({ extended: false });
