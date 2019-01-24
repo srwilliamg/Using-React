@@ -1,18 +1,35 @@
 const express = require('express');
-var session = require('express-session');
-var path = require('path');
-var bodyParser = require('body-parser');
-var cors = require('cors');
-var cookieParser = require('cookie-parser');
-var csrf = require('csurf'); //cross-site protection
+const session = require('express-session');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const passport = require('passport');
+const path = require('path');
+const cors = require('cors');
+const csrf = require('csurf'); //cross-site protection
+const db = require('./config/db');
+
+const port = process.env.PORT || 5000;
+require('./config/passport')(passport);
 
 const app = express();
-
 // app.set('views', __dirname + '/client/public');
 // app.engine('html', 'index.html');
 // app.set('view engine', 'html');
 app.use(express.static(path.join(__dirname + '/assets')));
+
+var csrfProtection = csrf({ cookie: true });
+//var parseForm = bodyParser.urlencoded({ extended: false });
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(cors());
+app.use(passport.initialize());
+app.use(session({
+  secret: 'reactSecret',
+  resave: true,
+  saveUninitialized: true
+}));
 
 const corsOptionsDelegate = (req, callback) => {
   let corsOptions;
@@ -29,39 +46,11 @@ const corsOptionsDelegate = (req, callback) => {
 
   return callback(null, corsOptions);
 };
-
 cors(corsOptionsDelegate);
-
-
-const db = require('./config/db');
-
-db
-  .authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
-
-var csrfProtection = csrf({ cookie: true });
-//var parseForm = bodyParser.urlencoded({ extended: false });
 
 var login = require('./routes/login');
 var signUp = require('./routes/signUp');
 var home = require('./routes/home');
-
-app.use(session({
-  secret: 'reactSecret',
-  resave: true,
-  saveUninitialized: true
-}));
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser())
-
-var session;
 
 app.all('/', function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -74,7 +63,7 @@ app.use('/api/signUp', signUp);
 app.use('/api/home', home);
 
 app.get('/getToken', csrfProtection,(req, res) => {
-  session = req.session;
+  let session = req.session;
   const token = {
     'token': req.csrfToken(),
   };
@@ -91,7 +80,5 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.redirect('error');
 });
-
-const port = 5000;
 
 app.listen(port, () => `Server running on port ${port}`);
