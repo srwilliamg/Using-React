@@ -15,13 +15,11 @@ router.post('/', function (req, res) {
 		where: {email: email}
 	})
 	.then(user => {
-		// console.log('Query result:',user);
-		let pass = user.get('password') == bcrypt.hashSync(password, 10);
-		// console.log(user.get('password'), bcrypt.hashSync(password, 10));
+		let pass = bcrypt.compareSync(password, user.get('password'));
 		
 		if(pass){
-			let token = jwt.sign(user.dataValues, 'reactSecret', {
-				expiresIn: 600000
+			let token = 'JWT '+jwt.sign(user.dataValues, 'reactSecret', {
+				expiresIn: 60*1000
 			});
 			res.json({...user.dataValues, ...{token:token}});
 		}

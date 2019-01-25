@@ -5,20 +5,12 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const path = require('path');
 const cors = require('cors');
-const csrf = require('csurf'); //cross-site protection
-const db = require('./config/db');
 
 const port = process.env.PORT || 5000;
 require('./config/passport')(passport);
 
 const app = express();
-// app.set('views', __dirname + '/client/public');
-// app.engine('html', 'index.html');
-// app.set('view engine', 'html');
 app.use(express.static(path.join(__dirname + '/assets')));
-
-var csrfProtection = csrf({ cookie: true });
-//var parseForm = bodyParser.urlencoded({ extended: false });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -58,18 +50,9 @@ app.all('/', function (req, res, next) {
   next();
 });
 
+app.use('/api/home', home);
 app.use('/api/login', login);
 app.use('/api/signUp', signUp);
-app.use('/api/home', home);
-
-app.get('/getToken', csrfProtection,(req, res) => {
-  let session = req.session;
-  const token = {
-    'token': req.csrfToken(),
-  };
-  
-  res.json(token);
-});
 
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development

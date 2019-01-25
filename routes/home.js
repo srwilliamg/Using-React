@@ -1,11 +1,13 @@
 /* eslint-disable no-console */
 const express = require('express');
-const execute = require('../db/executeQuery.js');
+const passport = require('passport');
 const router = express.Router();
 const Tasks = require('../models/tasks');
 
 // Consult every task pending user's task
-router.post('/consultTasks', (req, res) => {
+router.post('/consultTasks', passport.authenticate('jwt', {
+	session: false
+}), (req, res) => {
 	var sess = req.session;
 
 	console.log(req.body.idUser);
@@ -28,44 +30,37 @@ router.post('/consultTasks', (req, res) => {
 
 // Edita una tarea en la BD respecto a los adatos enviados (is, nombre, prioridad y fecha)
 // Envia true o false respecto a si fue existosa la edición o no.
-router.post('/editTask', function (req, res) {
-	var parametros = JSON.parse(Buffer.from(req.body.data, 'base64'));
+router.post('/editTask', passport.authenticate('jwt', {
+	session: false
+}), function (req, res) {
+	var params = req.body;
 
-	var strId = parametros.id;
-	var strNombre = parametros.nombre;
-	var strPrioridad = parametros.prioridad;
-	var strFecha = parametros.fecha;
+	var id = params.id;
+	var idUser = params.idUser;
+	var name = params.name;
+	var priority = params.priority;
+	var date = params.date;
 
-	var strResponse = '';
-
-	var jsonResponse = {
-		status: false
-	};
-
-	// consulta
-	var strQuery = `UPDATE
-									tarea SET
-									nombre = ?,
-									prioridad = ?,
-									vencimiento = ?
-									WHERE idtarea = ? `;
-
-	// query params
-	var queryParams = [strNombre, strPrioridad, strFecha, strId];
-
-	execute(strQuery, queryParams, function (response) {
-		//console.log(response);
-		jsonResponse.status = response.status;
-		// response to client
-		strResponse = JSON.stringify(jsonResponse);
-		res.send(new Buffer(strResponse).toString('base64'));
-	});
-
+	Tasks.update({
+		idUser: idUser,
+		name: name,
+		priority: priority,
+		completionDate: date,
+	}, {
+		where: {
+			idTask: id
+		},
+	})
+	.then((res) => console.log(res))
+	.then(() => res.status(200).end())
+	.catch(err => res.json({message:"Something was wrong", error:err}));
 });
 
 //Inserta una nueva tarea en la BD respecto alos datos enviados del cliente
 //Envia true o false respecto a si fue existosa la inserción o no.
-router.post('/createTask', function (req, res) {
+router.post('/createTask', passport.authenticate('jwt', {
+	session: false
+}), function (req, res) {
 	var sess = req.session;
 	// var parametros = JSON.parse(Buffer.from(req.body.data, 'base64'));
 	var params = req.body;
@@ -96,15 +91,10 @@ router.post('/createTask', function (req, res) {
 
 });
 
-//cerrar sesión
+//logout
 router.get('/logout', function (req, res) {
-	req.session.destroy(function (err) {
-		if (err) {
-			console.log(err);
-		} else {
-			res.redirect('/');
-		}
-	});
+	req.logout();
+	res.redirect('/');
 });
 
 module.exports = router;
