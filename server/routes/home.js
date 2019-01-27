@@ -2,10 +2,10 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
-const Tasks = require('../models/tasks');
+const Tasks = require('../models/index').Tasks;
 
 // Consult every task pending user's task
-router.post('/consultTasks', passport.authenticate('jwt', {
+router.post('/', passport.authenticate('jwt', {
 	session: false
 }), (req, res) => {
 	var sess = req.session;

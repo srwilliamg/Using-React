@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const User = require('../models/users');
+const User = require('../models/index').Users;
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
@@ -18,7 +18,7 @@ router.post('/', function (req, res) {
 		let pass = bcrypt.compareSync(password, user.get('password'));
 		
 		if(pass){
-			let token = 'JWT '+jwt.sign(user.dataValues, 'reactSecret', {
+			let token = 'JWT '+jwt.sign(user.dataValues, 'OtherSecret', {
 				expiresIn: 60*1000
 			});
 			res.json({...user.dataValues, ...{token:token}});

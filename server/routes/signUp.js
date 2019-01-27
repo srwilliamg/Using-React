@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/users');
+const db = require('../models/index');
 
 router.post('/', function (req, res) {
 	sess = req.session;
@@ -13,7 +13,7 @@ router.post('/', function (req, res) {
 	const email = params.email;
 	const password = params.password;
 
-	User
+	db.Users
 		.create({
 			name: name,
 			name2: name2,
@@ -24,11 +24,11 @@ router.post('/', function (req, res) {
 		})
 		.then(user => {
 			console.log(user); 
-			res.json(user);
+			res.status(200).json(user);
 		})
 		.catch(err => {
 			console.log(err);
-			res.json({message:'Something is not working'});
+			res.status(503).json({message:'Something is not working'});
 		});
 });
 

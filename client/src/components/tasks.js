@@ -13,15 +13,16 @@ class Tasks extends Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:5000/getToken')
-    .then(res => res.json())
-    .then(data => this.setState({
-      token: data.token
-    }, () => console.log('Token fetched...', data)))
-    .then(() => {
-      this.getTasks();
-    })
-    .catch(error=> console.log('Error::',error));
+    this.getTasks();
+    // fetch('http://localhost:5000/getToken')
+    // .then(res => res.json())
+    // .then(data => this.setState({
+    //   token: data.token
+    // }, () => console.log('Token fetched...', data)))
+    // .then(() => {
+    //   this.getTasks();
+    // })
+    // .catch(error=> console.log('Error::',error));
   }
 
   getTasks(){
@@ -31,7 +32,7 @@ class Tasks extends Component {
 
     console.log(this.state.token);
 
-    fetch('http://localhost:5000/api/home/consultTasks', {
+    fetch('/api/home/consultTasks', {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {

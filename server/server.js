@@ -50,9 +50,9 @@ app.all('/', function (req, res, next) {
   next();
 });
 
-app.use('/api/home', home);
 app.use('/api/login', login);
 app.use('/api/signUp', signUp);
+app.use('/api/home', home);
 
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
