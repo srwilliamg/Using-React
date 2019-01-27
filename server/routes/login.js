@@ -4,7 +4,7 @@ const User = require('../models/index').Users;
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-router.post('/', function (req, res) {
+router.post('/', (req, res) => {
 	// var parametros = JSON.parse(Buffer.from(req.body.data, 'base64'));
 	console.log('Request:',req.body);
 	var params = req.body;

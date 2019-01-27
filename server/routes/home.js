@@ -3,28 +3,24 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 const Tasks = require('../models/index').Tasks;
+const Users = require('../models/index').Users;
 
 // Consult every task pending user's task
-router.post('/', passport.authenticate('jwt', {
+router.post('/consultTasks', passport.authenticate('jwt', {
 	session: false
 }), (req, res) => {
-	var sess = req.session;
+	
+	const idUser = req.body.idUser;
 
-	console.log(req.body.idUser);
-
-	let jsonResponse = {
-		data: {},
-		status: false
-	};
-
-	Tasks.findAll()
-		.then(data => {
-			jsonResponse.data = data
-			res.json(jsonResponse);
+	Users.findByPk(idUser,{
+		include : ['Tasks']
+	})
+		.then(user => {
+			res.status(200).json(user.Tasks);
 		})
 		.catch(err => {
 			console.log(err);
-			res.json(jsonResponse);
+			res.status(503).json(err);
 		})
 });
 
@@ -35,11 +31,11 @@ router.post('/editTask', passport.authenticate('jwt', {
 }), function (req, res) {
 	var params = req.body;
 
-	var id = params.id;
-	var idUser = params.idUser;
-	var name = params.name;
-	var priority = params.priority;
-	var date = params.date;
+	const id = params.id;
+	const idUser = params.idUser;
+	const name = params.name;
+	const priority = params.priority;
+	const date = params.date;
 
 	Tasks.update({
 		idUser: idUser,
@@ -53,7 +49,10 @@ router.post('/editTask', passport.authenticate('jwt', {
 	})
 	.then((res) => console.log(res))
 	.then(() => res.status(200).end())
-	.catch(err => res.json({message:"Something was wrong", error:err}));
+	.catch(err => res.status(503).json({
+		message: "Something was wrong",
+		error: err
+	}));
 });
 
 //Inserta una nueva tarea en la BD respecto alos datos enviados del cliente
@@ -61,32 +60,26 @@ router.post('/editTask', passport.authenticate('jwt', {
 router.post('/createTask', passport.authenticate('jwt', {
 	session: false
 }), function (req, res) {
-	var sess = req.session;
-	// var parametros = JSON.parse(Buffer.from(req.body.data, 'base64'));
 	var params = req.body;
 
-	var strNombre = params.nombre;
-	var strPrioridad = params.prioridad;
-	var strFecha = params.fecha;
-
-	var objResponse = {
-		status: false
-	};
+	const idUser = params.idUser;
+	const name= params.name;
+	const priority = params.priority;
+	const date = params.date;
 
 	Tasks
 		.create({
-			idUser: 1,
-			name: "testCreation",
-			priority: "3",
-			completionDate: '1970-01-01 00:00:01',
+			idUser: idUser,
+			name: name,
+			priority: priority,
+			completionDate: date,
 		})
 		.then(task => {
-			objResponse.status = true;
-			res.json(objResponse);
+			res.status(200).json(task);
 		})
 		.catch(err => {
 			console.log(err);
-			res.json(objResponse);
+			res.status(503).json(err);
 		});
 
 });

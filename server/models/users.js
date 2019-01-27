@@ -10,21 +10,26 @@ module.exports = (sequelize, DataTypes) => {
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      is: ["^[a-z]+$",'i'],
     },
     name2: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      is: ["^[a-z]+$",'i'],
     },
     lastName: {
       type: DataTypes.STRING,
       allowNull: false,
+      is: ["^[a-z]+$",'i'],
     },
     lastName2: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      is: ["^[a-z]+$",'i'],
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      isEmail: true,
     },
     password: {
       type: DataTypes.STRING,
@@ -33,10 +38,12 @@ module.exports = (sequelize, DataTypes) => {
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: sequelize.NOW,
+      isDate: true,
     },
     updatedAt: {
       type: DataTypes.DATE,
       defaultValue: sequelize.NOW,
+      isDate: true,
     },
   }, {
     timestamps: true,
@@ -50,7 +57,10 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   User.associate = function (models) {
-    User.hasMany(models.Tasks);
+    User.hasMany(models.Tasks, {
+      foreignKey: 'idUser',
+      as: 'Tasks'
+    });
   };
   return User;
 };

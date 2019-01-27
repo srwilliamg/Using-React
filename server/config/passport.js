@@ -9,7 +9,7 @@ module.exports = function (passport) {
   // opts.issuer = 'accounts.examplesoft.com';
   // opts.audience = 'yoursite.net';
   passport.use(new JwtStrategy(opts, function (jwt_payload, done) {
-    console.log(jwt_payload);
+    // console.log(jwt_payload);
     
     User.findByPk(jwt_payload.idUser)
     .then(data => {
