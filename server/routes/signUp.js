@@ -28,13 +28,8 @@ router.post('/', function (req, res) {
 		})
 		.catch(err => {
 			console.log(err);
-			res.status(503).json({message:'Something is not working'});
+			res.status(503).json({message:'An error has occurred, try again.', error:err});
 		});
 });
-
-function notNull(param) {
-	let x = param.trim();
-	return x == null || x == undefined || x == '';
-}
 
 module.exports = router;

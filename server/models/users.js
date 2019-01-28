@@ -11,29 +11,47 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-      is: ["^[a-z]+$",'i'],
+      validate: {
+        is: ["^[a-z]+$",'i'],
+        notEmpty: true,
+      }
     },
     name2: {
       type: DataTypes.STRING,
-      is: ["^[a-z]+$",'i'],
+      validate: {
+        is: ["^[a-z]+$",'i'],
+        notEmpty: true,
+      }
     },
     lastName: {
       type: DataTypes.STRING,
       allowNull: false,
-      is: ["^[a-z]+$",'i'],
+      validate: {
+        is: ["^[a-z]+$",'i'],
+        notEmpty: true,
+      }
     },
     lastName2: {
       type: DataTypes.STRING,
-      is: ["^[a-z]+$",'i'],
+      validate: {
+        is: ["^[a-z]+$",'i'],
+        notEmpty: true,
+      }
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      isEmail: true,
+      validate: {
+        isEmail: true,
+        notEmpty: true,
+      },
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -43,7 +61,9 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: {
       type: DataTypes.DATE,
       defaultValue: sequelize.NOW,
+      validate: {
       isDate: true,
+      }
     },
   }, {
     timestamps: true,

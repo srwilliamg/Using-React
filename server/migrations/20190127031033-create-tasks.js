@@ -11,14 +11,17 @@ module.exports = {
       name: {
         type: Sequelize.STRING,
         allowNull: false,
+        notEmpty: true,
       },
       priority: {
         type: Sequelize.STRING,
         allowNull: false,
+        notEmpty: true,
       },
       completionDate: {
         type: Sequelize.DATE,
         allowNull: false,
+        notEmpty: true,
       },
       createdAt: {
         type: Sequelize.DATE,

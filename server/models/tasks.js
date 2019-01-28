@@ -8,17 +8,26 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-      is: ["^[a-z]+$", 'i'],
+      validate: {
+        is: ["^[a-z]+$", 'i'],
+        notEmpty: true,
+      }
     },
     priority: {
       type: DataTypes.STRING,
       allowNull: false,
-      not: ["[a-z]", 'i'],
+      validate: {
+        not: ["[a-z]", 'i'],
+        notEmpty: true,
+      }
     },
     completionDate: {
       type: DataTypes.DATE,
       allowNull: false,
-      isDate: true,
+      validate: {
+        isDate: true,
+        notEmpty: true,
+      }
     },
     createdAt: {
       type: DataTypes.DATE,

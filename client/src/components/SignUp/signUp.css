@@ -1,0 +1,9 @@
+.bg {
+  background-image: url('../../assets/images/loginImage.jpg');
+}
+
+.labelLogin {
+  float: left;
+  color: white;
+  font-weight: 600;
+}

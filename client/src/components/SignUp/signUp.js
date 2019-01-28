@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import './login.css';
-import {Link, Redirect} from 'react-router-dom';
+import './signUp.css';
+import {Redirect} from 'react-router-dom';
 import {
   Alert,
   Container,
@@ -13,18 +13,22 @@ import {
   Input,
 } from 'reactstrap';
 
-class Login extends Component {
+class SignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
+      name: '',
+      name2:'',
+      lastName:'',
+      lastName2:'',
+      email:'',
       password: '',
       visible: false,
       message: '',
       redirect: false,
     };
 
-    this.logIn = this.logIn.bind(this);
+    this.signUp = this.signUp.bind(this);
     this.updateInput = this.updateInput.bind(this);
     this.onDismiss = this.onDismiss.bind(this);
   }
@@ -41,13 +45,17 @@ class Login extends Component {
     });
   }
 
-  logIn() {
+  signUp() {
     var data = {
+      name: this.state.name,
+      name2: this.state.name2,
+      lastName: this.state.lastName,
+      lastName2: this.state.lastName2,
       email: this.state.email,
-      password: this.state.password
+      password: this.state.password,
     };
 
-    fetch('/api/logIn', {
+    fetch('/api/signUp', {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {
@@ -60,8 +68,7 @@ class Login extends Component {
         if (data.message) {
           throw data.message;
         }
-        // console.warn(data);
-        localStorage.setItem('token', data.token);
+        console.warn(data);
         this.setState({
           redirect: true
         });
@@ -78,7 +85,7 @@ class Login extends Component {
     return (
       <div className="bg h-100">
         <Container className="h-100">
-          {this.state.redirect && <Redirect to='/home' push={true} />}
+          {this.state.redirect && <Redirect to='/' push={true} />}
           < Alert
             color="danger"
             isOpen={
@@ -91,8 +98,84 @@ class Login extends Component {
           </Alert>
           <Row className="loginPosition align-items-center">
             <Col xs={{ size: 8, offset: 2 }}>
-              <h1 style={{color:'white', textAlign:'center'}}>Using react</h1>
+              <h1 style={{color:'white', textAlign:'center'}}>Sign up</h1>
               <Form>
+                <Row>
+                  <Col>
+                    <FormGroup>
+                      <Label className="labelLogin" for="name">Name</Label>
+                      <Input type="name"
+                        name="name"
+                        placeholder=""
+                        value={
+                          this.state.name
+                        }
+                        onChange={
+                          this.updateInput
+                        }
+                        autoFocus
+                      />
+                    </FormGroup>
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col>
+                    <FormGroup>
+                      <Label className="labelLogin" for="name2">Second name</Label>
+                      <Input type="name2"
+                        name="name2"
+                        placeholder=""
+                        value={
+                          this.state.name2
+                        }
+                        onChange={
+                          this.updateInput
+                        }
+                        autoFocus
+                      />
+                    </FormGroup>
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col>
+                    <FormGroup>
+                      <Label className="labelLogin" for="lastName">Lastname</Label>
+                      <Input type="lastName"
+                        name="lastName"
+                        placeholder=""
+                        value={
+                          this.state.lastName
+                        }
+                        onChange={
+                          this.updateInput
+                        }
+                        autoFocus
+                      />
+                    </FormGroup>
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col>
+                    <FormGroup>
+                      <Label className="labelLogin" for="lastName2">Second Lastname</Label>
+                      <Input type="lastName2"
+                        name="lastName2"
+                        placeholder=""
+                        value={
+                          this.state.lastName2
+                        }
+                        onChange={
+                          this.updateInput
+                        }
+                        autoFocus
+                      />
+                    </FormGroup>
+                  </Col>
+                </Row>
+
                 <Row>
                   <Col>
                     <FormGroup>
@@ -136,14 +219,9 @@ class Login extends Component {
                       size="lg"
                       outline
                       color="primary"
-                      onClick={this.logIn}>
-                      Sign in
-                  </Button>
-                  </Col>
-                  <Col xs={{size:6, offset:3}}  style={{ textAlign: 'center' }}>
-                    <Link to="signUp">
+                      onClick={this.signUp}>
                       Sign up
-                    </Link>
+                  </Button>
                   </Col>
                 </Row>
 
@@ -158,4 +236,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default SignUp;
