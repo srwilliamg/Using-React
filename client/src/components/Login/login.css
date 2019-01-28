@@ -1,0 +1,13 @@
+.bg{
+  background-image: url('../../assets/images/loginImage.jpg');
+}
+
+.loginPosition{
+  height: 70%;
+}
+
+.labelLogin{
+  float:left;
+  color: white;
+  font-weight: 600;
+}

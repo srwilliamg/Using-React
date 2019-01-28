@@ -15,19 +15,25 @@ router.post('/', (req, res) => {
 		where: {email: email}
 	})
 	.then(user => {
+
+		if(!user){
+			throw "error";
+		}
+		
 		let pass = bcrypt.compareSync(password, user.get('password'));
 		
 		if(pass){
 			let token = 'JWT '+jwt.sign(user.dataValues, 'OtherSecret', {
 				expiresIn: 60*1000
 			});
-			res.json({...user.dataValues, ...{token:token}});
+			res.status(200).json({token:token});
 		}
 		else{
-			res.json({
+			res.status(401).json({
 				message: 'Password incorrect'
 			});
 		}
+
 	})
 	.catch(err => {
 		console.log(err);
