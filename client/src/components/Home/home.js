@@ -11,9 +11,41 @@ class Home extends React.Component {
 		super(props);
 		this.state = {
 				visible: false,
+				redirect: false,
+				message: '',
 		};
 	}
 
+	componentDidMount(){
+		const token = localStorage.getItem('token');
+		console.warn(token);
+		
+		fetch('/api/home/consultTasks', {
+      method: 'POST',
+      body: JSON.stringify({}),
+      headers: {
+        'Accept': 'application/json',
+				'content-type': 'application/json',
+				'Authentication': token,
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.message) {
+          throw data.message;
+        }
+        console.warn(data);
+        this.setState({
+          redirect: true
+        });
+      })
+      .catch(err => {
+        this.setState({
+          visible: true,
+          message: err
+        });
+      });
+	}
 	render() {
 		return (
 			<Container>
