@@ -9,19 +9,23 @@ const Users = require('../models/index').Users;
 router.post('/consultTasks', passport.authenticate('jwt', {
 	session: false
 }), (req, res) => {
-	
-	const idUser = req.body.idUser;
 
-	Users.findByPk(idUser,{
-		include : ['Tasks']
-	})
-		.then(user => {
-			res.status(200).json(user.Tasks);
-		})
-		.catch(err => {
-			console.log(err);
-			res.status(503).json(err);
-		})
+	const data = req.body;
+	console.log(req);
+	console.log(data);
+
+	// Users.findByPk(idUser,{
+	// 	include : ['Tasks']
+	// })
+	// 	.then(user => {
+	// 		res.status(200).json(user.Tasks);
+	// 	})
+	// 	.catch(err => {
+	// 		console.log(err);
+	// 		res.status(503).json(err);
+	// 	})
+
+	res.json(data);
 });
 
 // Edita una tarea en la BD respecto a los adatos enviados (is, nombre, prioridad y fecha)

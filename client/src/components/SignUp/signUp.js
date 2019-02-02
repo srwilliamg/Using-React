@@ -96,7 +96,7 @@ class SignUp extends Component {
             } >
             {this.state.message}
           </Alert>
-          <Row className="loginPosition align-items-center">
+          <Row className="align-items-center h-100">
             <Col xs={{ size: 8, offset: 2 }}>
               <h1 style={{color:'white', textAlign:'center'}}>Sign up</h1>
               <Form>
