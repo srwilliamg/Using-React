@@ -42,8 +42,27 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isEmail: true,
-        notEmpty: true,
+        isEmail: {
+          msg:"Please enter a correct email."
+        },
+        notEmpty: {
+          msg: "Email cannot be empty."
+        },
+        isUnique : function (value, next) {
+            const field = 'email';
+            var query = {};
+            query[field] = value;
+            User.find({
+              where: query,
+              attributes: ['email']
+            }).then(function (obj) {
+              if (obj) {
+                next(field + ' "' + value + '" is already in use');
+              } else {
+                next();
+              }
+            });
+          }
       },
     },
     password: {

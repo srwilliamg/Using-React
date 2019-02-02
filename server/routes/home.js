@@ -85,9 +85,11 @@ router.post('/createTask', passport.authenticate('jwt', {
 });
 
 //logout
-router.get('/logout', function (req, res) {
+router.get('/logout', passport.authenticate('jwt', {
+			session: false
+		}), function (req, res) {
 	req.logout();
-	res.redirect('/');
+	// res.redirect('/');
 });
 
 module.exports = router;
