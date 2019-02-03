@@ -1,5 +1,7 @@
 import React from 'react';
+
 import './home.css';
+import Tasks from '../Tasks/tasks';
 import {
 	Container,
 	Row,
@@ -18,7 +20,7 @@ class Home extends React.Component {
 
 	componentDidMount(){
 		const token = localStorage.getItem('token');
-		console.warn(token);
+		// console.warn(token);
 		
 		fetch('/api/home/consultTasks', {
       method: 'POST',
@@ -26,7 +28,7 @@ class Home extends React.Component {
       headers: {
         'Accept': 'application/json',
 				'content-type': 'application/json',
-				'Authentication': token,
+				'Authorization': token,
       }
     })
       .then(res => res.json())
@@ -46,12 +48,14 @@ class Home extends React.Component {
         });
       });
 	}
+
 	render() {
 		return (
-			<Container>
+			<Container fluid={true}>
 				<Row>
-					<Col>
-						<h1>HOME</h1>
+					<Col xs={{size:10, offset:1}}>
+						<br></br>
+						<Tasks />
 					</Col>
 				</Row>
 			</Container>

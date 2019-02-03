@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Login from './components/Login/login';
 import SignUp from './components/SignUp/signUp';
 import Home from './components/Home/home';
+import Header from './components/shared/header';
 import {
   BrowserRouter as Router,
   Route
@@ -14,6 +15,7 @@ class App extends Component {
         <div className="h-100">
           <Route exact path="/" component={Login} />
           <Route exact path="/signUp" component={SignUp} />
+          <Route exact path="/home" component={Header} />
           <Route exact path="/home" component={Home} />
         </div>
       </Router>

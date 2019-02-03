@@ -10,22 +10,23 @@ router.post('/consultTasks', passport.authenticate('jwt', {
 	session: false
 }), (req, res) => {
 
-	const data = req.body;
-	console.log(req);
-	console.log(data);
+	// const data = req.body;
+	const user = req.user.dataValues;
 
-	// Users.findByPk(idUser,{
-	// 	include : ['Tasks']
-	// })
-	// 	.then(user => {
-	// 		res.status(200).json(user.Tasks);
-	// 	})
-	// 	.catch(err => {
-	// 		console.log(err);
-	// 		res.status(503).json(err);
-	// 	})
+	Users.findByPk(user.idUser,{
+		include : ['Tasks']
+	})
+		.then(user => {
+			res.status(200).json(user.Tasks);
+		})
+		.catch(err => {
+			console.log(err);
+			res.status(503).json({
+				message: "Something was wrong",
+				error: err
+			});
+		})
 
-	res.json(data);
 });
 
 // Edita una tarea en la BD respecto a los adatos enviados (is, nombre, prioridad y fecha)
@@ -36,7 +37,7 @@ router.post('/editTask', passport.authenticate('jwt', {
 	var params = req.body;
 
 	const id = params.id;
-	const idUser = params.idUser;
+	const idUser = req.user.dataValues.idUser;
 	const name = params.name;
 	const priority = params.priority;
 	const date = params.date;
@@ -56,7 +57,8 @@ router.post('/editTask', passport.authenticate('jwt', {
 	.catch(err => res.status(503).json({
 		message: "Something was wrong",
 		error: err
-	}));
+		})
+	);
 });
 
 //Inserta una nueva tarea en la BD respecto alos datos enviados del cliente
@@ -65,11 +67,12 @@ router.post('/createTask', passport.authenticate('jwt', {
 	session: false
 }), function (req, res) {
 	var params = req.body;
-
-	const idUser = params.idUser;
+	console.log(params);
+	
+	const idUser = req.user.dataValues.idUser;
 	const name= params.name;
 	const priority = params.priority;
-	const date = params.date;
+	const date = params.completionDate;
 
 	Tasks
 		.create({
@@ -79,11 +82,14 @@ router.post('/createTask', passport.authenticate('jwt', {
 			completionDate: date,
 		})
 		.then(task => {
-			res.status(200).json(task);
+			res.status(200).json("OK");
 		})
 		.catch(err => {
 			console.log(err);
-			res.status(503).json(err);
+			res.status(503).json({
+				message: "Something was wrong",
+				error: err
+			});
 		});
 
 });

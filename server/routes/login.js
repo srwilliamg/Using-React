@@ -26,7 +26,16 @@ router.post('/', (req, res) => {
 			let token = 'JWT '+jwt.sign(user.dataValues, 'OtherSecret', {
 				expiresIn: 60*1000
 			});
-			res.status(200).json({token:token});
+			res.status(200).json(
+				{
+					token:token, 
+					name: user.name, 
+					name2: user.name2,
+					lastname: user.lastname,
+					lastname2: user.lastname2,
+					email: user.email
+				}
+			);
 		}
 		else{
 			res.status(401).json({

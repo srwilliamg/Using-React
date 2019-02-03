@@ -66,7 +66,7 @@ class Login extends Component {
           redirect: true
         });
       })
-      .catch(err => {
+      .catch(err => {        
         this.setState({
           visible: true,
           message: err

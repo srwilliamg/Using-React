@@ -9,7 +9,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        is: ["^[a-z]+$", 'i'],
         notEmpty: true,
       }
     },
@@ -19,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         not: ["[a-z]", 'i'],
         notEmpty: true,
+        min: 0
       }
     },
     completionDate: {
