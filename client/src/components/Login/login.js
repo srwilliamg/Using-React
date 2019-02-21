@@ -42,12 +42,12 @@ class Login extends Component {
   }
 
   logIn() {
-    var data = {
+    const data = {
       email: this.state.email,
       password: this.state.password
     };
 
-    fetch('/api/logIn', {
+    fetch('/api/auth/logIn', {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {

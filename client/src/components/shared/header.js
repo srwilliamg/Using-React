@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import {
   Collapse,
   Navbar,
@@ -19,15 +20,30 @@ export default class Example extends React.Component {
     this.toggle = this.toggle.bind(this);
     this.state = {
       isOpen: false,
-      username: 'Username'
+      username: 'Username',
+      redirect: false
     };
   }
+
   toggle() {
     this.setState({
       isOpen: !this.state.isOpen
     });
   }
+
+  logout = () =>{
+    localStorage.clear();
+    console.log("Storage cleared");
+    this.setState({
+      redirect: true
+    });
+  }
+
   render() {
+    if (this.state.redirect) {
+      return <Redirect to="/" />;
+    }
+
     return (
       <div>
         <Navbar dark={true} color="dark" light expand="md">
@@ -47,7 +63,7 @@ export default class Example extends React.Component {
                     Reload tasks
                   </DropdownItem>
                   <DropdownItem divider />
-                  <DropdownItem>
+                  <DropdownItem onClick={this.logout}>
                     Logout
                   </DropdownItem>
                 </DropdownMenu>
